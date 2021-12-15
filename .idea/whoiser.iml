@@ -5,11 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/jeremykendall/php-domain-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/true/punycode" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/mallardduck/whois-client" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/mallardduck/whois-server-list" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/io-developer/php-whois" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

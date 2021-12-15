@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#     ,------ MINUTE (0-59)
+#    / ,----- HOUR (0 - 23)
+#   / / ,---- DAY OF MONTH (1 - 31)
+#  / / / ,--- MONTH (1 - 12) OR jan,feb,mar,apr ...
+# / / / / ,-- DAY OF WEEK (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+#/ / / / /
+* * * * * php /usr/src/whoiser/script.php >> /var/log/cron.log 2>&1
+
+# An empty line is required at the end of this file for a valid cron file.

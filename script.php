@@ -2,12 +2,10 @@
 require 'vendor/autoload.php';
 
 use Iodev\Whois\Factory;
-use Iodev\Whois\Exceptions\ConnectionException;
-use Iodev\Whois\Exceptions\ServerMismatchException;
-use Iodev\Whois\Exceptions\WhoisException;
 
 // Config:
-$DOMAINTOPOPULATE = 'google';
+$DOMAINTOPOPULATE = 'sedical';
+$SENDEMAILALERTTO = 'EMAILTOSENDALERT';
 
 // Creating default configured client
 $whois = Factory::get()->createWhois();
@@ -68,6 +66,7 @@ $TLDs = ['aero', 'asia', 'biz', 'cat', 'com', 'coop', 'info', 'int', 'jobs', 'mo
 
 $populatedDomainNames = populate($DOMAINTOPOPULATE);
 
+$emailDomains = [];
 file_put_contents("log.txt", "");//Empty before start file:
 foreach( $populatedDomainNames as $domainName){
     foreach ($TLDs as $tldExt) {
@@ -79,7 +78,6 @@ foreach( $populatedDomainNames as $domainName){
             $available = $whois->isDomainAvailable($checkingDomain);
             $log = $checkingDomain . " | " . $available ."\n";
         }catch (Exception $e) {
-            //print("\n".$e."\n");
             $available = 2;
             $log = $checkingDomain . " | " . $available ."\n";
         }
@@ -89,21 +87,26 @@ foreach( $populatedDomainNames as $domainName){
 
         // check if is an alert:
         if($available == 0) {
-            $noAlertArray = file('noalert.txt');
+            $noAlertArray = file('./noalert.txt', FILE_IGNORE_NEW_LINES);
 
-            print_r("noalert");
-            print_r($noAlertArray);
-
-            if (in_array($checkingDomain, $noAlertArray)) {
-
+            if (in_array($checkingDomain,$noAlertArray)) {
+                // Ya se encuentra en el array, no hacer nada.
             }else{
-                // Send alert email:
-                print('Alert email for: '. $checkingDomain ."\n");
-                mail("jmadrigal@sedical.com","Alerta de dominio similar", "Se ha registrado el dominio: ". $checkingDomain);
-
-                // Add for no alert more:
-                file_put_contents('noalert.txt', $checkingDomain, FILE_APPEND);
+                $emailDomains[] = $checkingDomain;
+                // Add for no alert more: (in linux \r\n can be replaced by \n)
+                //print('Alert email for: '. $checkingDomain ."\n");
+                file_put_contents('noalert.txt', $checkingDomain . "\r\n", FILE_APPEND);
             }
         }
     }
+}
+if(count($emailDomains) > 0){
+    $emailText = "The domains: \r\n";
+    if(count($emailDomains) === 1){
+        $emailText = "The domain: \r\n";
+    }
+    foreach($emailDomains as $domainToAlert){
+        $emailText .= $domainToAlert . "\r\n";
+    }
+    mail($SENDEMAILALERTTO,"Similar domain alert", $emailText . " \n\n has been registered.");
 }

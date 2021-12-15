@@ -1,0 +1,15 @@
+version: '3'
+services:
+  php:
+    build: .
+    restart: unless-stopped
+    command: crond -f -l 8
+    volumes:
+      - .:/usr/src/whoiser
+    depends_on:
+      - composer
+  composer:
+    image: composer
+    volumes:
+      - .:/app
+    command: install
